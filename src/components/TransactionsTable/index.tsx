@@ -1,7 +1,10 @@
 import React from "react";
+import { useTransactions } from "../../hooks/useTransactions";
 import { Container } from "./styles";
 
 export function TrasactionsTable() {
+  const { transactions } = useTransactions();
+
   return (
     <Container>
       <table>
@@ -15,18 +18,23 @@ export function TrasactionsTable() {
         </thead>
 
         <tbody>
-          <tr>
-            <td>Software development </td>
-            <td className="deposit">12.000 € </td>
-            <td>Development </td>
-            <td>21/03/2021 </td>
-          </tr>
-          <tr>
-            <td>Rentcar </td>
-            <td className="withdraw">-100 € </td>
-            <td>Service </td>
-            <td>18/03/2021 </td>
-          </tr>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id}>
+              <td>{transaction.title} </td>
+              <td className={transaction.type}>
+                {new Intl.NumberFormat("de-De", {
+                  style: "currency",
+                  currency: "EUR",
+                }).format(transaction.amount)}
+              </td>
+              <td>{transaction.category} </td>
+              <td>
+                {new Intl.DateTimeFormat("de-De").format(
+                  new Date(transaction.createdAt)
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Container>
